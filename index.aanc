@@ -8,6 +8,7 @@
 
 require_once 'controller/ControllerUniversal.aanc';
 
+echo password_hash("admin", PASSWORD_DEFAULT);
 $controller = new ControllerUniversal();
 
 $controller->verificaLogin();
