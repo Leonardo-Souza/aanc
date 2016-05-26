@@ -98,6 +98,9 @@
                         <li>
                             <a href="<?php echo "{$_SESSION['self']}chamada/gerar"; ?>"><i class="fa fa-fw fa-list"></i> Gerar Chamada</a>
                         </li>
+                        <li>
+                            <a href="<?php echo "{$_SESSION['self']}aluno/nca"; ?>"><i class="fa fa-fw fa-file"></i> Nada Consta</a>
+                        </li>
                     </ul>
 
                 </li>
