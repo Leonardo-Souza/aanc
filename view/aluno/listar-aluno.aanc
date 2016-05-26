@@ -43,8 +43,7 @@ include_once 'template/head.aanc';
 
                                     $botoes = ($_SESSION['id'] == 0 or $_SESSION['area'] == 2)
                                             ? "<a class='btn btn-circle btn-warning' href='{$_SESSION['self']}aluno/editar/{$lista[$item]['id']}' ><i class='fa fa-pencil'></i></a>
-                                               <a class='btn btn-circle btn-danger apagar' id='{$lista[$item]['id']}' ><i class='fa fa-trash'></i></a>
-                                               <a href='{$_SESSION['self']}aluno/ncd/{$lista[$item]['id']}' class='btn btn-circle btn-primary' type='submit' ><i class='fa fa-file-pdf-o'></i></a>"
+                                               <a class='btn btn-circle btn-danger apagar' id='{$lista[$item]['id']}' ><i class='fa fa-trash'></i></a>"
                                             : "";
 
                                     echo <<<ITEM
