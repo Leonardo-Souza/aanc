@@ -1,0 +1,65 @@
+<?php
+
+/**
+ * Created by PhpStorm.
+ * User: Leonardo Vilarinho
+ * Date: 05/03/2016
+ * Time: 19:10
+ */
+
+// Includes
+
+require_once "ModelObjeto.aanc";
+
+class ModelCurso extends ModelObjeto
+{
+
+    /**
+     * ModelFuncionario constructor.
+     * Exectado quando o ModelFuncionario é instanciado, instancia um novo ModelPersistencia
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+    
+
+
+    public function preparaListagem($tabela)
+    {
+        return parent::abrirMetodo("listagem", $tabela);
+    }
+
+    public function preparaCriacao($curso)
+    {
+        if( validaString($curso['nome'], "Nome incorreto!", true) and
+            validaStringNumeral($curso['descricao'], "Descrição inválida!", true)
+        )
+        {
+            unset($curso['novocurso-requerido']);
+            $curso['tabela'] = "cursos";
+            $curso['consulta'] = "nome";
+            return parent::abrirMetodo("criacao", $curso);
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public function preparaEdicao($curso)
+    {
+        if( validaString($curso['nome'], "Nome incorreto!", true) and
+            validaStringNumeral($curso['descricao'], "Descrição inválida!", true) and validaInteiro($curso['id'], "ID Incorreto!", true))
+        {
+            unset($curso['editarcurso-requerido']);
+            $curso['tabela'] = "cursos";
+            return parent::abrirMetodo("edicao", $curso);
+        }
+        else
+        {
+            return false;
+        }
+
+    }
+}

@@ -1,0 +1,100 @@
+<?php
+
+/**
+ * Created by PhpStorm.
+ * User: Leonardo Vilarinho e Guilherme Mamedio
+ * Date: 29/03/2016
+ * Time: 11:10
+ */
+
+// Includes
+require_once 'ModelConta.aanc';
+require_once 'ModelObjeto.aanc';
+
+class ModelFuncionario extends ModelObjeto
+{
+    // variavel para biblioteca de ModelPersistencia
+
+    private $conta = NULL;
+
+    /**
+     * ModelFuncionario constructor.
+     * Exectado quando o ModelFuncionario é instanciado, instancia um novo ModelPersistencia
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->conta = new ModelConta();
+    }
+    
+    
+    public function preparaListagem($tabela)
+    {
+        return parent::abrirMetodo("listagem", $tabela);
+    }
+
+    public function preparaCriacao($funcionario)
+    {
+        $funcionario['cpf'] = str_replace(".", "", $funcionario['cpf']);
+        $funcionario['cpf'] = str_replace("-", "", $funcionario['cpf']);
+
+        unset($funcionario['novofuncionario-requerido']);
+        $funcionario['tabela'] = "funcionarios";
+        $funcionario['consulta'] = "cpf";
+
+        $funcionario['ativo'] = 0;
+        $funcionario['senha'] = password_hash($funcionario['cpf'], PASSWORD_DEFAULT);
+
+        if($funcionario['cpf'] == $this->conta->getAdminCPF())
+        {
+            throw new Exception("CPF já cadastrado!");
+        }
+
+        if(!validaCPF($funcionario['cpf']))
+        {
+            throw new Exception("CPF é inválido!");
+        }
+
+        if( validaString($funcionario['nome'], "Nome inválido!", true) and validaArea($funcionario['area']) and
+            validaEmail($funcionario['email']) and validaIdade($funcionario['nascimento'], 18) and
+            validaInteiro($funcionario['numero'], "Número incorreto!"))
+        {
+            return parent::abrirMetodo("criacao", $funcionario);
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public function preparaEdicao($funcionario)
+    {
+        $funcionario['cpf'] = str_replace(".", "", $funcionario['cpf']);
+        $funcionario['cpf'] = str_replace("-", "", $funcionario['cpf']);
+
+        unset($funcionario['editarfuncionario-requerido']);
+        $funcionario['tabela'] = "funcionarios";
+
+        if($funcionario['cpf'] == $this->conta->getAdminCPF())
+        {
+            throw new Exception("CPF já cadastrado!");
+        }
+
+        if(!validaCPF($funcionario['cpf']))
+        {
+            throw new Exception("CPF é inválido!");
+        }
+        if( validaString($funcionario['nome'], "Nome inválido!", true) and validaArea($funcionario['area']) and
+            validaEmail($funcionario['email']) and validaIdade($funcionario['nascimento'], 18) and
+            validaInteiro($funcionario['numero'], "Número incorreto!"))
+        {
+            return parent::abrirMetodo("edicao", $funcionario);
+        }
+        else
+        {
+            return false;
+        }
+
+    }
+    
+}

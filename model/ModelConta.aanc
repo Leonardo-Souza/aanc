@@ -1,0 +1,190 @@
+<?php
+
+/**
+ * Created by PhpStorm.
+ * User: Leonardo Vilarinho e Guilherme Mamedio
+ * Date: 29/03/2016
+ * Time: 01:10
+ */
+
+// Includes
+require_once 'ModelPersistencia.aanc';
+require_once 'validacao.aanc';
+
+// Inicia uma sessão
+session_name(md5('token'.$_SERVER['REMOTE_ADDR'].$_SERVER['HTTP_USER_AGENT']));
+session_start();
+
+class ModelConta
+{
+    // variavel para biblioteca de ModelPersistencia
+    private $crud = NULL;
+    private $adminCPF = "13471661654";
+    private $adminSenha = "admin";
+    /**
+     * ModelConta constructor.
+     * Exectado quando o ModelConta é instanciado, instancia um novo ModelPersistencia
+     */
+    public function __construct()
+    {
+        $this->crud = new ModelPersistencia();
+    }
+
+    /**
+     * @return string
+     *Pega CPF do administrado
+     */
+    public function getAdminCPF()
+    {
+        return $this->adminCPF;
+    }
+
+    /**
+     * @param $tipo
+     * @param $cpf
+     * @param $senha
+     * @return bool
+     * @throws Exception
+     * Prepara cpf e chama método de validação
+     */
+    public function preparaLogin($tipo, $cpf, $senha)
+    {
+        $cpf = str_replace(".", "", $cpf);
+        $cpf = str_replace("-", "", $cpf);
+
+        return ($tipo == 1 or $tipo ==2) ?  $this->efetuaLogin($tipo,$cpf, $senha) : false;
+    }
+
+    /**
+     * @param $tipo
+     * @param $cpf
+     * @param $senha
+     * @return bool
+     * @throws Exception
+     * Chama ModelPersistencia para conusultar usuário e valida o mesmo criando variaveis de sessão para identifica-lo
+     */
+    private function efetuaLogin($tipo, $cpf, $senha)
+    {
+        try
+        {
+            if($cpf === $this->adminCPF)
+            {
+                if(password_verify($senha, password_hash($this->adminSenha, PASSWORD_DEFAULT)))
+                {
+                    $_SESSION['area'] = 0;
+                    $_SESSION['ativo'] = 1;
+                    $_SESSION['id'] = 0;
+                    $_SESSION['usuario'] = "admin";
+                    $_SESSION["key"] = md5('token'.$_SERVER['REMOTE_ADDR'].$_SERVER['HTTP_USER_AGENT']);
+                    return true;
+                }
+                else
+                {
+                    throw new Exception("Senha do administrador está incorreta.");
+                    return false;
+                }
+            }
+            else
+            {
+                if($tipo == 2)
+                {
+                    $usuario = $this->crud->consult("funcionarios", "*", "cpf = {$cpf}");
+                    if($cpf == $usuario[0]['cpf'] and password_verify($senha, $usuario[0]['senha']))
+                    {
+                        $_SESSION['tipo'] = 2;
+                        $_SESSION['area'] = $usuario[0]['area'];
+                        $_SESSION['ativo'] = $usuario[0]['ativo'];
+                        $_SESSION['id'] = $usuario[0]['id'];
+                        $nome = explode(" ", $usuario[0]['nome']);
+                        $_SESSION['usuario'] = $nome[0];
+                        $_SESSION['cpf'] = $usuario[0]['cpf'];
+                        $_SESSION["key"] = md5('token'.$_SERVER['REMOTE_ADDR'].$_SERVER['HTTP_USER_AGENT']);
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    $usuario = $this->crud->consult("alunos", "*", "cpf = {$cpf}");
+                    if($cpf == $usuario[0]['cpf'] and password_verify($senha, $usuario[0]['senha']))
+                    {
+                        $_SESSION['tipo'] = 2;
+                        $_SESSION['area'] = 4;
+                        $_SESSION['ativo'] = $usuario[0]['ativo'];
+                        $_SESSION['id'] = $usuario[0]['id'];
+                        $nome = explode(" ", $usuario[0]['nome']);
+                        $_SESSION['usuario'] = $nome[0];
+                        $_SESSION['cpf'] = $usuario[0]['cpf'];
+                        $_SESSION["key"] = md5('token'.$_SERVER['REMOTE_ADDR'].$_SERVER['HTTP_USER_AGENT']);
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+        catch(CRUDException $ex)
+        {
+            throw new Exception($ex->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * @param $senha1
+     * @param $senha2
+     * @return bool
+     * @throws Exception
+     *
+     * Verifica senhas para alterar
+     */
+    public function preparaAlteracaoSenha($senha1, $senha2)
+    {
+        if($senha1 === $senha2)
+        {
+            return  $this->efetuaAlteracaoSenha($senha1);
+        }
+        else
+        {
+            throw new Exception("Senhas não são idênticas.");
+            return false;
+        }
+    }
+
+    /**
+     * @param $senha
+     * @return bool
+     * @throws Exception
+     *
+     * Altera a senha no banco de dados
+     */
+    private function efetuaAlteracaoSenha($senha)
+    {
+        try
+        {
+            if($_SESSION['tipo'] == 2)
+            {
+                return $this->crud->update("funcionarios",
+                    array("senha", "ativo"),
+                    array(password_hash($senha, PASSWORD_DEFAULT), 1),
+                    "cpf = {$_SESSION['cpf']}");
+            }
+            else
+            {
+                throw new Exception("Módulo Aluno ainda não foi inserido");
+                return false;
+            }
+        }
+        catch(CRUDException $ex)
+        {
+            throw new Exception($ex->getMessage());
+            return false;
+        }
+    }
+
+}

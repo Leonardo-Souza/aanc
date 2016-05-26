@@ -1,0 +1,43 @@
+<?php
+
+/**
+ * Created by PhpStorm.
+ * User: Leonardo Vilarinho e Guilherme Mamedio
+ * Date: 05/04/2016
+ * Time: 7:52
+ */
+
+// Includes
+require_once 'model/ModelAdvertencia.aanc';
+require_once 'ControllerObjeto.aanc';
+$erro = "";
+
+class ControllerAdvertencia extends ControllerObjeto
+{
+    // variável para camada Model
+    public $model = NULL;
+
+    /**
+     * ControllerCurso constructor.
+     * Instancia camada Model
+     */
+    public function __construct()
+    {
+        $this->model = new ModelAdvertencia();
+    }
+
+    /**
+     * @param $metodo
+     * Faz comunicação com ControllerUniversal, para executar seus métodos privados
+     */
+    public function inicializa($metodo)
+    {
+        $dados = array();
+        if(isset($_POST))
+        {
+            $dados['infos'] = $this->moverArray($_POST);
+        }
+        parent::abrirMetodo($metodo, parent::inicializaDados($dados, $metodo, $this->model, "advertencia", "alunos"));
+    }
+    
+}

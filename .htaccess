@@ -1,0 +1,12 @@
+AddType application/x-httpd-php .aanc
+
+DirectoryIndex index.aanc
+
+<IfModule mod_rewrite.c>
+
+    RewriteEngine On
+
+    RewriteRule ^([a-z]+)/?$ index.aanc?ato=$1 [NC]
+    RewriteRule ^([a-z]+)/([a-z]+)/?$ index.aanc?objeto=$1&ato=$2 [NC]
+    RewriteRule ^([a-z]+)/([a-z]+)/([0-9]+)/?$ index.aanc?objeto=$1&ato=$2&id=$3 [NC,L]
+</IfModule>

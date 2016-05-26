@@ -1,0 +1,101 @@
+<?php
+
+/**
+ * Created by PhpStorm.
+ * User: Leonardo Vilarinho e Guilherme Mamedio
+ * Date: 29/03/2016
+ * Time: 11:10
+ */
+
+// Includes
+require_once 'ModelConta.aanc';
+require_once 'ModelObjeto.aanc';
+
+
+class ModelAluno extends ModelObjeto
+{
+    // variavel para biblioteca de ModelPersistencia
+
+    private $conta = NULL;
+
+    /**
+     * ModelFuncionario constructor.
+     * Exectado quando o ModelFuncionario é instanciado, instancia um novo ModelPersistencia
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->conta = new ModelConta();
+    }
+
+    
+    public function preparaListagem($tabela)
+    {
+        return parent::abrirMetodo("listagem", $tabela);
+    }
+
+    public function preparaCriacao($aluno)
+    {
+        $aluno['cpf'] = str_replace(".", "", $aluno['cpf']);
+        $aluno['cpf'] = str_replace("-", "", $aluno['cpf']);
+
+        unset($aluno['novoaluno-requerido']);
+        $aluno['tabela'] = "alunos";
+        $aluno['consulta'] = "cpf";
+
+        $aluno['ativo'] = 0;
+        $aluno['senha'] = password_hash($aluno['cpf'], PASSWORD_DEFAULT);
+
+        if($aluno['cpf'] == $this->conta->getAdminCPF())
+        {
+            throw new Exception("CPF já cadastrado!");
+        }
+
+        if(!validaCPF($aluno['cpf']))
+        {
+            throw new Exception("CPF é inválido!");
+        }
+
+        if( validaString($aluno['nome'], "Nome inválido!", true) and validaArea($aluno['curso']) and
+            validaEmail($aluno['email']) and validaIdade($aluno['nascimento'], 13) and
+            validaInteiro($aluno['numero'], "Número incorreto!"))
+        {
+            return parent::abrirMetodo("criacao", $aluno);
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public function preparaEdicao($aluno)
+    {
+        $aluno['cpf'] = str_replace(".", "", $aluno['cpf']);
+        $aluno['cpf'] = str_replace("-", "", $aluno['cpf']);
+
+        unset($aluno['editaraluno-requerido']);
+        $aluno['tabela'] = "alunos";
+
+        if($aluno['cpf'] == $this->conta->getAdminCPF())
+        {
+            throw new Exception("CPF já cadastrado!");
+        }
+
+        if(!validaCPF($aluno['cpf']))
+        {
+            throw new Exception("CPF é inválido!");
+        }
+        if( validaString($aluno['nome'], "Nome inválido!", true) and validaArea($aluno['curso']) and
+            validaEmail($aluno['email']) and validaIdade($aluno['nascimento'], 13) and
+            validaInteiro($aluno['numero'], "Número incorreto!"))
+        {
+            return parent::abrirMetodo("edicao", $aluno);
+        }
+        else
+        {
+            return false;
+        }
+
+    }
+    
+}

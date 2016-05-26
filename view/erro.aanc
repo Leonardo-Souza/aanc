@@ -1,0 +1,32 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: Leonardo Vilarinho
+ * Date: 10/03/2016
+ * Time: 14:51
+ */
+
+include_once 'template/head.aanc';
+?>
+    <section class="row">
+
+        <div class="col-md-12 ">
+            <div class="panel panel-danger">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="fa fa-warning"></i> Erro</h3>
+                </div>
+                    <div class="panel-body text-center text-danger">
+                        <h1>Acesso Negado.</h1>
+                        <p>Você não tem permissão para acessar essa area.</p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+<?php
+include_once 'template/scripts.aanc';
+
+echo "<script src='{$_SESSION['self']}libs/formzin.js'></script>";
+echo "<script src='{$_SESSION['self']}js/confirmacao.js'></script>";
+include_once 'template/end.aanc';

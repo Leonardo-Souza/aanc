@@ -1,0 +1,129 @@
+<?php
+
+/**
+ * Created by PhpStorm.
+ * User: Leonardo Vilarinho e Guilherme Mamedio
+ * Date: 29/03/2016
+ * Time: 11:10
+ */
+
+// Includes
+require_once 'ModelObjeto.aanc';
+require_once 'ModelPersistencia.aanc';
+
+class ModelViagem extends ModelObjeto
+{
+
+    private $crud = null;
+    /**
+     * ModelFuncionario constructor.
+     * Exectado quando o ModelFuncionario é instanciado, instancia um novo ModelPersistencia
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+    
+    
+    public function preparaListagem($tabela)
+    {
+        return parent::abrirMetodo("listagem", $tabela);
+    }
+
+    public function pegarAluno($id)
+    {
+        try
+        {
+            $id = (int)$id;
+            $this->crud = new ModelPersistencia();
+            return $this->crud->consult("alunos", "*", "id = {$id}");
+        }
+        catch (CRUDException $ex)
+        {
+            throw new Exception($ex->getMessage());
+        }
+
+    }
+
+    public function pegarViagens()
+    {
+        try
+        {
+            $data = date("Y-m-d");
+            $this->crud = new ModelPersistencia();
+            return $this->crud->consult("viagens", "*", "ida > {$data}");
+        }
+        catch (CRUDException $ex)
+        {
+            throw new Exception($ex->getMessage());
+        }
+
+    }
+
+    public function preparaAdicao($idAluno, $idViagem)
+    {
+        $idAluno = (int)$idAluno;
+        $idViagem = (int)$idViagem;
+        try
+        {
+            $this->crud = new ModelPersistencia();
+            $verifica = $this->crud->consult("chamada", "id", "aluno = {$idAluno} AND viagem = {$idViagem}");
+            if(!empty($verifica))
+            {
+                throw new Exception("Aluno já foi cadastrado nessa viagem.");
+            }
+            else
+            {
+                $viagm = $this->crud->consult("viagens", "disponivel", "id = {$idViagem}");
+                if($viagm[0]['disponivel']  <= 0)
+                {
+                  throw new Exception("Não há mais vagas nessa viagem.");  
+                }
+                $this->crud->update("viagens", "disponivel", ($viagm[0]['disponivel'] - 1), "id = {$idViagem}");
+                return $this->crud->insert("chamada", array("aluno", "viagem"), array($idAluno, $idViagem) );
+            }
+
+
+        }
+        catch (CRUDException $ex)
+        {
+            throw new Exception($ex->getMessage());
+        }
+
+    }
+
+    public function preparaCriacao($viagem)
+    {
+        unset($viagem['novoviagem-requerido']);
+        $viagem['tabela'] = "viagens";
+        $viagem['consulta'] = "nome";
+
+        if( validaStringNumeral($viagem['nome'], "Nome inválido!", true) and validaArea($viagem['instrutor']) and
+            validaStringNumeral($viagem['descricao'], "Descrição errada!"))
+        {
+            return parent::abrirMetodo("criacao", $viagem);
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public function preparaEdicao($viagem)
+    {
+        unset($viagem['editarviagem-requerido']);
+        $viagem['tabela'] = "viagens";
+
+        if( validaStringNumeral($viagem['nome'], "Nome inválido!", true) and validaArea($viagem['instrutor']) and
+            validaStringNumeral($viagem['descricao'], "Descrição errada!"))
+        {
+            return parent::abrirMetodo("edicao", $viagem);
+        }
+        else
+        {
+            return false;
+        }
+
+    }
+    
+}

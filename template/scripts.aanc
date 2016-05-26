@@ -1,0 +1,20 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: Mamedio
+ * Date: 28/03/2016
+ * Time: 21:19
+ */
+?>
+
+</div>
+    <!-- /#page-wrapper -->
+
+</div>
+<!-- /#wrapper -->
+
+<!-- jQuery -->
+<script src="<?php echo $_SESSION['self']; ?>libs/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="<?php echo $_SESSION['self']; ?>libs/bootstrap/js/bootstrap.min.js"></script>

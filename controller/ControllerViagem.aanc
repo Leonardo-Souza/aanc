@@ -1,0 +1,86 @@
+<?php
+
+/**
+ * Created by PhpStorm.
+ * User: Leonardo Vilarinho e Guilherme Mamedio
+ * Date: 30/03/2016
+ * Time: 12:35
+ */
+
+// Includes
+require_once 'model/ModelViagem.aanc';
+$erro = "";
+class ControllerViagem extends ControllerObjeto
+{
+    // variável para camada Model
+    public $model = NULL;
+
+    /**
+     * ControllerFuncionario constructor.
+     * executada quando uma ControllerFuncionario é instanciada, chama a camada model equivalente
+     */
+    public function __construct()
+    {
+        $this->model = new ModelViagem();
+    }
+
+    /**
+     * @param $metodo
+     * Define um array com os dados do objeto e da tela a ser apresentada e chama o método da superclasse para
+     * executar a ação
+     */
+    public function inicializa($metodo)
+    {
+        if($metodo == "add")
+        {
+            $this->add();
+        }
+        else
+        {
+            $dados = array();
+            if(isset($_POST))
+            {
+                $dados['infos'] = $this->moverArray($_POST);
+            }
+            //var_dump($dados['infos'] );
+            @$dados['infos']['disponivel'] = $dados['infos']['alunos'];
+            $dados['condicao'] = "area = '3'";
+            parent::abrirMetodo($metodo, parent::inicializaDados($dados, $metodo, $this->model, "viagem", "funcionarios"));
+        }
+    }
+
+    private function add()
+    {
+        $id = (int)$_GET['id'];
+        $titulo = "Adicionar aluno na viagem";
+        $icone = "plus";
+        try
+        {
+            $aluno = $this->model->pegarAluno($id);
+            $viagens = $this->model->pegarViagens();
+        }
+        catch (Exception $e)
+        {
+            $erro = $e->getMessage();
+        }
+
+
+        if(isset($_POST['addaluno']) and $_POST['addaluno'] == $_SESSION['token'])
+        {
+            try
+            {
+                if($this->model->preparaAdicao($_POST['aluno'], $_POST['viagem']))
+                {
+                    header("Location:{$_SESSION['self']}aluno/listar");
+                }
+            }
+            catch (Exception $e)
+            {
+                $erro = $e->getMessage();
+            }
+        }
+
+        include "view/viagem/add.aanc";
+    }
+    
+}

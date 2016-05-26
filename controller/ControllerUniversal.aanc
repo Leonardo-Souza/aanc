@@ -1,0 +1,159 @@
+<?php
+
+/**
+ * Created by PhpStorm.
+ * User: Leonardo Vilarinho
+ * Date: 28/03/2016
+ * Time: 15:17
+ */
+
+// Includes de outros módulos
+require_once 'ControllerCurso.aanc';
+require_once 'ControllerFuncionario.aanc';
+require_once 'ControllerConta.aanc';
+require_once 'ControllerAluno.aanc';
+require_once 'ControllerAdvertencia.aanc';
+require_once 'ControllerChamada.aanc';
+require_once 'ControllerViagem.aanc';
+
+class ControllerUniversal
+{
+    /**
+     * Método verifica se existem váriaveis de sessão e faz redicerionamento caso já tenha feito aanc
+     */
+    public function verificaLogin()
+    {
+        if(isset($_SESSION['usuario']) and isset($_SESSION['id']))
+        {
+            if($_SESSION['ativo'] == 0)
+            {
+                $_GET['objeto'] = "conta";
+                $_GET['ato'] = "alterarsenha";
+            }
+            else
+            {
+                $_GET['objeto'] = (isset($_GET['objeto'])) ? $_GET['objeto'] : "aluno" ;
+                $_GET['ato'] = (isset($_GET['ato'])) ? $_GET['ato'] : "listar" ;
+            }
+        }
+        else
+        {
+            $_SESSION['self'] = $_SERVER['REQUEST_URI'];
+            $_GET['objeto'] = "conta";
+            $_GET['ato'] = "logar";
+
+            if($_SESSION['self'] != "/aanc/")
+            {
+                header("Location: ../");
+            }
+        }
+    }
+
+    /**
+     * Pega a classe e método requerida(o) pelo parâmento ato e executa
+     * Fazendo o controle de acesso
+     */
+    public function requerir()
+    {
+        $token = md5('token'.$_SERVER['REMOTE_ADDR'].$_SERVER['HTTP_USER_AGENT']);
+
+        if(isset($_SESSION['key']) and $_SESSION['key'] != $token)
+        {
+            $this->sairSistema();
+        }
+
+        $objeto = (isset($_GET['objeto'])) ? $_GET['objeto'] : NULL;
+        $ato = (isset($_GET['ato'])) ? $_GET['ato'] : NULL;
+        
+        $diretoria = array("curso", "conta", "aluno");
+        $apoio = array("conta", "advertencia", "aluno", "viagem", "chamada");
+        $professor  = array("conta", "chamada");
+        $aluno = array("conta");
+        $liberado = false;
+        try
+        {
+            if($ato == "sair")
+            {
+                $this->sairSistema();
+            }
+            else
+            {
+                if($ato == "logar" or $ato == null)
+                {
+                    $liberado = true;
+                }
+                else if(isset($_SESSION['area']) and $_SESSION['area'] == 0)
+                {
+                    $liberado = true;
+                }
+                else if (isset($_SESSION['area']) and $_SESSION['area'] == 1 and in_array($objeto, $apoio))
+                {
+                    if($objeto == "aluno" and ($ato == "criar" or $ato == "ncd") )
+                    {
+                        $liberado = false;
+                        $titulo = "Erro no Acesso";
+                        include "view/erro.aanc";
+                    }
+                    else
+                    {
+                        $liberado = true;
+                    }
+                }
+                else if (isset($_SESSION['area']) and $_SESSION['area'] == 2 and in_array($objeto, $diretoria))
+                {
+                    $liberado = true;
+                }
+                else if (isset($_SESSION['area']) and $_SESSION['area'] == 3 and in_array($objeto, $professor))
+                {
+                    if($ato == "fazer" or $objeto == "conta")
+                    {
+                        $liberado = true;
+                    }
+                    else
+                    {
+                        $titulo = "Erro no Acesso";
+                        include "view/erro.aanc";
+                    }
+                }
+                else if (isset($_SESSION['area']) and $_SESSION['area'] == 4 and in_array($objeto, $aluno))
+                {
+                    $liberado = true;
+                }
+                else
+                {
+                    $titulo = "Erro no Acesso";
+                    include "view/erro.aanc";
+                }
+                
+                if($liberado)
+                {
+                    $objeto = "Controller" . $objeto;
+
+                    if(class_exists($objeto) and method_exists($objeto, $ato))
+                    {
+                        $controllerAto = new $objeto();
+                        $controllerAto->inicializa($ato);
+                    }
+                }
+            }
+        }
+        catch(Exception $ex)
+        {
+
+        }
+
+    }
+
+    /**
+     * Para sair do sistema, destrói todas variáveis de sessão e a sessão
+     */
+    private function sairSistema()
+    {
+        unset($_SESSION['id']);
+        unset($_SESSION['usuario']);
+        unset($_SESSION['key']);
+        session_destroy();
+        header("Location:{$_SESSION['self']}");
+    }
+
+}

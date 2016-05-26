@@ -1,0 +1,68 @@
+<?php
+
+/**
+ * Created by PhpStorm.
+ * User: Leonardo Vilarinho
+ * Date: 05/03/2016
+ * Time: 19:10
+ */
+
+// Includes
+
+require_once "ModelObjeto.aanc";
+
+class ModelAdvertencia extends ModelObjeto
+{
+
+    /**
+     * ModelFuncionario constructor.
+     * Exectado quando o ModelFuncionario é instanciado, instancia um novo ModelPersistencia
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+    
+
+
+    public function preparaListagem($tabela)
+    {
+        return parent::abrirMetodo("listagem", $tabela);
+    }
+
+    public function preparaCriacao($advertencia)
+    {
+        if( validaInteiro($advertencia['aluno'], "Aluno incorreto!", true) and
+            validaStringNumeral($advertencia['motivo'], "Motivo inválido!", true) and
+            validaArea($advertencia['aluno']) and validaStringNumeral($advertencia['detalhes'], "Detalhe inválido!")
+        )
+        {
+            unset($advertencia['novoadvertencia-requerido']);
+            $advertencia['tabela'] = "advertencias";
+            $advertencia['funcionario'] = $_SESSION['id'];
+            return parent::abrirMetodo("criacao", $advertencia);
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public function preparaEdicao($advertencia)
+    {
+        if( validaInteiro($advertencia['aluno'], "Aluno incorreto!", true) and
+            validaStringNumeral($advertencia['motivo'], "Motivo inválido!", true) and
+            validaArea($advertencia['aluno']) and validaStringNumeral($advertencia['detalhes'], "Detalhe inválido!")
+        )
+        {
+            unset($advertencia['editaradvertencia-requerido']);
+            $advertencia['tabela'] = "advertencias";
+            $advertencia['funcionario'] = $_SESSION['id'];
+            return parent::abrirMetodo("edicao", $advertencia);
+        }
+        else
+        {
+            return false;
+        }
+    }
+}

@@ -1,0 +1,102 @@
+<?php
+
+/**
+ * Created by PhpStorm.
+ * User: Leonardo Vilarinho e Guilherme Mamedio
+ * Date: 29/04/2016
+ * Time: 00:56
+ */
+
+// Includes
+require_once 'model/ModelConta.aanc';
+$erro = "";
+class ControllerConta
+{
+    // variável para camada Model
+    private $model = NULL;
+
+    /**
+     * ControllerConta constructor.
+     * executada quando uma ControllerConta é instanciada, chama a camada model equivalente
+     */
+    public function __construct()
+    {
+        $this->model = new ModelConta();
+    }
+
+    /**
+     * @param $metodo
+     * Faz comunicação com ControllerUniversal, para executar seus métodos privados
+     */
+    public function inicializa($metodo)
+    {
+        $this->$metodo();
+    }
+
+
+    /**
+     * Chama view de aanc, e o model quando formulário de aanc for enviado
+     */
+    private function logar()
+    {
+        $titulo = $tituloconteudo = "Login AANC";
+        $icone = "sign-in";
+
+        if(isset($_POST['login-requerido']))
+        {
+            try
+            {
+                $login = $this->model->preparaLogin($_POST['tipo'], $_POST['cpf'], $_POST['senha']);
+
+                if($login)
+                {
+                    header("Location: {$_SESSION['self']}aluno/listar");
+                }
+                else
+                {
+                    $erro = "Usuário ou senha inválido.";
+                }
+            }
+            catch(Exception $ex)
+            {
+                $erro = $ex->getMessage();
+            }
+        }
+
+        include 'view/entrar.aanc';
+    }
+
+    /**
+     * Chama model para alterar senha um usuário com o id no get
+     */
+    private function alterarSenha()
+    {
+        $titulo = $tituloconteudo = "Alteração de senha";
+        $icone = "key";
+
+        if(isset($_POST['alterarsenha-requerido']))
+        {
+            try
+            {
+                $senha = $this->model->preparaAlteracaoSenha($_POST['senha'], $_POST['confirmasenha']);
+
+                if($senha)
+                {
+                    $_SESSION['ativo'] = 1;
+                    header("Location: {$_SESSION['self']}aluno/listar");
+                }
+                else
+                {
+                    $erro = "Usuário ou senha inválido.";
+                }
+            }
+            catch(Exception $ex)
+            {
+                $erro = $ex->getMessage();
+            }
+        }
+        
+        include 'view/alterar-senha.aanc';
+    }
+}
+

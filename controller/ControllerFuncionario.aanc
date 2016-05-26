@@ -1,0 +1,43 @@
+<?php
+
+/**
+ * Created by PhpStorm.
+ * User: Leonardo Vilarinho e Guilherme Mamedio
+ * Date: 30/03/2016
+ * Time: 12:35
+ */
+
+// Includes
+require_once 'model/ModelFuncionario.aanc';
+$erro = "";
+class ControllerFuncionario extends ControllerObjeto
+{
+    // variável para camada Model
+    public $model = NULL;
+
+    /**
+     * ControllerFuncionario constructor.
+     * executada quando uma ControllerFuncionario é instanciada, chama a camada model equivalente
+     */
+    public function __construct()
+    {
+        $this->model = new ModelFuncionario();
+    }
+
+    /**
+     * @param $metodo
+     * Define um array com os dados do objeto e da tela a ser apresentada e chama o método da superclasse para
+     * executar a ação
+     */
+    public function inicializa($metodo)
+    {
+
+        $dados = array();
+        if(isset($_POST))
+        {
+            $dados['infos'] = $this->moverArray($_POST);
+        }
+        parent::abrirMetodo($metodo, parent::inicializaDados($dados, $metodo, $this->model, "funcionario"));
+    }
+    
+}
