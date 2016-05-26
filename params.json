@@ -1,0 +1,6 @@
+{
+  "name": "Aanc",
+  "tagline": "",
+  "body": "# aanc\r\n# Código criado para trabalho de Engenharia de Software II\r\n# Instituto Federal do Triângulo Mineiro - 2016\r\n#\r\n#\r\n# O sistema tem como objetivo gerar Nada Consta automatizado de alunos, verificando se\r\n# os mesmo estão em situação pendente com a instituição de ensino.\r\n#\r\n# Haverá um módulo extra contendo uma comunicação com a portaria do instituto para realizar\r\n# a liberação de alunos menores de idade.\r\n#\r\n#\r\n# Feito com arquitetura MVC.\r\n",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
