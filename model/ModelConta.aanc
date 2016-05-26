@@ -12,7 +12,7 @@ require_once 'ModelPersistencia.aanc';
 require_once 'validacao.aanc';
 
 // Inicia uma sessão
-session_name(md5('token'.$_SERVER['REMOTE_ADDR'].$_SERVER['HTTP_USER_AGENT']));
+//session_name(md5('token'.$_SERVER['REMOTE_ADDR'].$_SERVER['HTTP_USER_AGENT']));
 session_start();
 
 class ModelConta
@@ -75,13 +75,12 @@ class ModelConta
                     $_SESSION['ativo'] = 1;
                     $_SESSION['id'] = 0;
                     $_SESSION['usuario'] = "admin";
-                    $_SESSION["key"] = md5('token'.$_SERVER['REMOTE_ADDR'].$_SERVER['HTTP_USER_AGENT']);
+                    //$_SESSION["key"] = md5('token'.$_SERVER['REMOTE_ADDR'].$_SERVER['HTTP_USER_AGENT']);
                     return true;
                 }
                 else
                 {
                     throw new Exception("Senha do administrador está incorreta.");
-                    return false;
                 }
             }
             else
@@ -98,7 +97,7 @@ class ModelConta
                         $nome = explode(" ", $usuario[0]['nome']);
                         $_SESSION['usuario'] = $nome[0];
                         $_SESSION['cpf'] = $usuario[0]['cpf'];
-                        $_SESSION["key"] = md5('token'.$_SERVER['REMOTE_ADDR'].$_SERVER['HTTP_USER_AGENT']);
+                        //$_SESSION["key"] = md5('token'.$_SERVER['REMOTE_ADDR'].$_SERVER['HTTP_USER_AGENT']);
                         return true;
                     }
                     else
@@ -118,7 +117,7 @@ class ModelConta
                         $nome = explode(" ", $usuario[0]['nome']);
                         $_SESSION['usuario'] = $nome[0];
                         $_SESSION['cpf'] = $usuario[0]['cpf'];
-                        $_SESSION["key"] = md5('token'.$_SERVER['REMOTE_ADDR'].$_SERVER['HTTP_USER_AGENT']);
+                        //$_SESSION["key"] = md5('token'.$_SERVER['REMOTE_ADDR'].$_SERVER['HTTP_USER_AGENT']);
                         return true;
                     }
                     else
@@ -131,7 +130,6 @@ class ModelConta
         catch(CRUDException $ex)
         {
             throw new Exception($ex->getMessage());
-            return false;
         }
     }
 
@@ -152,7 +150,6 @@ class ModelConta
         else
         {
             throw new Exception("Senhas não são idênticas.");
-            return false;
         }
     }
 
@@ -177,13 +174,11 @@ class ModelConta
             else
             {
                 throw new Exception("Módulo Aluno ainda não foi inserido");
-                return false;
             }
         }
         catch(CRUDException $ex)
         {
             throw new Exception($ex->getMessage());
-            return false;
         }
     }
 

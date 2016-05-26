@@ -38,7 +38,7 @@ class ControllerUniversal
         }
         else
         {
-            $_SESSION['self'] = $_SERVER['REQUEST_URI'];
+            $_SESSION['self'] = "/aanc/";
             $_GET['objeto'] = "conta";
             $_GET['ato'] = "logar";
 
@@ -55,7 +55,7 @@ class ControllerUniversal
      */
     public function requerir()
     {
-        $token = md5('token'.$_SERVER['REMOTE_ADDR'].$_SERVER['HTTP_USER_AGENT']);
+        //$token = md5('token'.$_SERVER['REMOTE_ADDR'].$_SERVER['HTTP_USER_AGENT']);
 
         if(isset($_SESSION['key']) and $_SESSION['key'] != $token)
         {
