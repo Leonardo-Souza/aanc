@@ -37,18 +37,10 @@ include_once 'template/head.aanc';
                             </div>
 
                             <div class="col-md-2 col-md-offset-1 col-sm-10 col-sm-offset-1 col-xs-10 col-xs-offset-1 text-center">
-                                <input type="submit" class="btn btn-lg btn-success " value="Gerar" />
+                                <input type="submit" class="btn btn-success " value="Gerar" />
                                 <?php if(!empty($chamada)): ?>
-                                    <form method="post">
-                                        <input type="hidden" name="pdf" value="pdf" />
-                                        <input type="submit" class="btn btn-danger " value="Gerar PDF" />
-                                    </form>
-
-                                    <form method="post">
-                                        <input type="hidden" name="pdfcompleto" value="pdf" />
-                                        <input type="submit" class="btn btn-warning " value="PDF Completo" />
-                                    </form>
-
+                                    <input type="submit" name="pdf" class="btn btn-danger " value="Gerar PDF" />
+                                    <input type="submit" name="pdfcompleto"  class="btn btn-warning " value="PDF Completo" />
                                 <?php endif; ?>
                             </div>
                         </form>

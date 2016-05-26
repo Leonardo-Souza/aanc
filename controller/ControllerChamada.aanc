@@ -58,7 +58,7 @@ class ControllerChamada extends ControllerObjeto
         }
 
 
-        if(isset($_POST['viagem']))
+        if(isset($_POST['viagem']) and !isset($_POST['pdf']) and !isset($_POST['pdfcompleto']))
         {
             try
             {
@@ -73,26 +73,36 @@ class ControllerChamada extends ControllerObjeto
 
         if(isset($_POST['pdf']))
         {
-            try
+            if(isset($_POST['viagem']))
             {
-                $this->model->pdfChamada($_SESSION['chamada'], false);
+                try
+                {
+                    $this->model->pdfChamada($_SESSION['chamada'], false);
+                }
+                catch (Exception $e)
+                {
+                    $erro = $e->getMessage();
+                }
             }
-            catch (Exception $e)
-            {
-                $erro = $e->getMessage();
-            }
+            else
+                $erro = "Gere a chamada antes";
         }
 
         if(isset($_POST['pdfcompleto']))
         {
-            try
+            if(isset($_POST['viagem']))
             {
-                $this->model->pdfChamada($_SESSION['chamada'], true);
+                try
+                {
+                    $this->model->pdfChamada($_SESSION['chamada'], true);
+                }
+                catch (Exception $e)
+                {
+                    $erro = $e->getMessage();
+                }
             }
-            catch (Exception $e)
-            {
-                $erro = $e->getMessage();
-            }
+            else
+                $erro = "Gere a chamada antes";
         }
 
         include "view/chamada/gerar-chamada.aanc";

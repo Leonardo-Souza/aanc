@@ -34,7 +34,7 @@ class ModelChamada extends ModelObjeto
         try
         {
             $id = (int)$id;
-            return $this->sql("SELECT alunos.id, alunos.nome, alunos.cpf, chamada.status FROM alunos, chamada, viagens WHERE alunos.id = chamada.aluno AND chamada.viagem = viagens.id");
+            return $this->sql("SELECT alunos.id, alunos.nome, alunos.cpf, chamada.status FROM alunos, chamada, viagens WHERE alunos.id = chamada.aluno AND chamada.viagem = viagens.id AND viagens.id = {$id}");
         }
         catch (CRUDException $ex)
         {
