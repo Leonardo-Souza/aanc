@@ -143,18 +143,18 @@ class ModelObjeto
     }
 
 
-    public function preparaNadaConsta($tabela, $onde = "1 = 1")
+    public function preparaNadaConsta($tabela, $onde = "1 = 1", $tipo)
     {
-        return $this->executaNadaConsta($tabela, $onde);
+        return $this->executaNadaConsta($tabela, $onde, $tipo);
     }
 
-    private function executaNadaConsta($tabela, $onde = "1 = 1")
+    private function executaNadaConsta($tabela, $onde = "1 = 1", $tipo)
     {
         try
         {
             $consulta = $this->crud->consult($tabela, "*", $onde);
             $curso = $this->crud->consult("cursos", "nome", "id  = {$consulta[0]['curso']}");
-            $this->pdf->make($consulta, $curso[0]['nome']);
+            $this->pdf->make($consulta, $curso[0]['nome'], $tipo);
             return true;
         }
         catch(CRUDException $ex)

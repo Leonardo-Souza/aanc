@@ -68,9 +68,9 @@ class ControllerObjeto
     }
 
     /**
-     * @param $dados
-     * Chama model e passa parâmetro para ele realizar a pesquisa de nada consta da diretoria
-     */
+ * @param $dados
+ * Chama model e passa parâmetro para ele realizar a pesquisa de nada consta da diretoria
+ */
     private function ncd($dados)
     {
         $titulo = $tituloconteudo = $dados['titulo'];
@@ -92,7 +92,7 @@ class ControllerObjeto
             try
             {
                 $id = (int) $_GET['id'];
-                $$dados['objeto'] = $dados['model']->preparaNadaConsta("alunos", "id = {$id}");
+                $$dados['objeto'] = $dados['model']->preparaNadaConsta("alunos", "id = {$id}", "ncd");
             }
             catch(Exception $ex)
             {
@@ -100,6 +100,41 @@ class ControllerObjeto
             }
         }
         include "view/nadaconsta/ncd-aluno.aanc";
+    }
+
+    /**
+     * @param $dados
+     * Chama model e passa parâmetro para ele realizar a pesquisa de nada consta do apoio
+     */
+    private function nca($dados)
+    {
+        $titulo = $tituloconteudo = $dados['titulo'];
+        $icone = $dados['icone'];
+
+        if(isset($_POST['nomebusca']))
+        {
+            try
+            {
+                $$dados['objeto'] = $dados['model']->preparaConsulta("nome", $_POST['nomebusca'], $dados['tabela']);
+            }
+            catch(Exception $ex)
+            {
+                $erro = $ex->getMessage();
+            }
+        }
+        else if(isset($_GET['id']))
+        {
+            try
+            {
+                $id = (int) $_GET['id'];
+                $$dados['objeto'] = $dados['model']->preparaNadaConsta("alunos", "id = {$id}", "nca");
+            }
+            catch(Exception $ex)
+            {
+                $erro = $ex->getMessage();
+            }
+        }
+        include "view/nadaconsta/nca-aluno.aanc";
     }
 
     /**
@@ -209,6 +244,7 @@ class ControllerObjeto
     public function defineTitulo($acao, $objeto)
     {
         $acao = ($acao == "ncd") ? "Nada Consta da Diretoria" : $acao;
+        $acao = ($acao == "nca") ? "Nada Consta do Apoio" : $acao;
         return mb_strtoupper(mb_substr($acao,0,1)).mb_substr($acao,1)." ".$objeto;
     }
 
@@ -224,6 +260,8 @@ class ControllerObjeto
         else if($acao == "pesquisar") return "search";
         else if($acao == "editar") return "pencil";
         else if($acao == "apagar") return "trash";
+        else if($acao == "nca") return "file";
+        else if($acao == "ncd") return "file";
     }
 
     /**
