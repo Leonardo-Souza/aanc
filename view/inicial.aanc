@@ -1,0 +1,63 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: Leonardo Vilarinho
+ * Date: 10/03/2016
+ * Time: 14:51
+ */
+
+include_once 'template/head.aanc';
+?>
+    <section class="row">
+
+        <div class="col-md-12 ">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="fa fa-sign-in"></i> Bem-vindo ao AANC</h3>
+                </div>
+                    <div class="panel-body text-success">
+                        <p>Você acaba de entrar no Administração de Alunos por Nada Consta, o objetivo desse sistema é automatizar
+                        a tarefa de geração do documento do nada consta. Veja o que você pode fazer:</p>
+
+                        <p><strong>Aluno:</strong></p>
+                        <ul>
+                            <li>Gerar nada consta da diretoria (necessário assinatura de um funcionário).</li>
+                            <li>Gerar nada consta do apoio (necessário assinatura de um funcionário).</li>
+                        </ul>
+
+                        <p><strong>Professor:</strong></p>
+                        <ul>
+                            <li>Realizar chamada das viagens.</li>
+                        </ul>
+
+                        <p><strong>F. Apoio:</strong></p>
+                        <ul>
+                            <li>Gerenciar viagens.</li>
+                            <li>Gerenciar advertências.</li>
+                            <li>Gerar chamadas das viagens.</li>
+                            <li>Manipular lista de alunos liberados.</li>
+                        </ul>
+
+                        <p><strong>F. Diretoria:</strong></p>
+                        <ul>
+                            <li>Gerenciar alunos.</li>
+                            <li>Gerenciar cursos.</li>
+                        </ul>
+
+                        <p><strong>Portaria:</strong></p>
+                        <ul>
+                            <li>Realizar liberação de alunos.</li>
+                        </ul>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+<?php
+include_once 'template/scripts.aanc';
+
+echo "<script src='{$_SESSION['self']}libs/formzin.js'></script>";
+echo "<script src='{$_SESSION['self']}js/confirmacao.js'></script>";
+include_once 'template/end.aanc';

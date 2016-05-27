@@ -15,6 +15,7 @@ require_once 'ControllerAluno.aanc';
 require_once 'ControllerAdvertencia.aanc';
 require_once 'ControllerChamada.aanc';
 require_once 'ControllerViagem.aanc';
+require_once 'ControllerInicial.aanc';
 
 class ControllerUniversal
 {
@@ -32,8 +33,8 @@ class ControllerUniversal
             }
             else
             {
-                $_GET['objeto'] = (isset($_GET['objeto'])) ? $_GET['objeto'] : "aluno" ;
-                $_GET['ato'] = (isset($_GET['ato'])) ? $_GET['ato'] : "listar" ;
+                $_GET['objeto'] = (isset($_GET['objeto'])) ? $_GET['objeto'] : "inicial" ;
+                $_GET['ato'] = (isset($_GET['ato'])) ? $_GET['ato'] : "panel" ;
             }
         }
         else
@@ -65,10 +66,10 @@ class ControllerUniversal
         $objeto = (isset($_GET['objeto'])) ? $_GET['objeto'] : NULL;
         $ato = (isset($_GET['ato'])) ? $_GET['ato'] : NULL;
         
-        $diretoria = array("curso", "conta", "aluno");
-        $apoio = array("conta", "advertencia", "aluno", "viagem", "chamada");
-        $professor  = array("conta", "chamada");
-        $aluno = array("conta");
+        $diretoria = array("curso", "conta", "aluno", "inicial");
+        $apoio = array("conta", "advertencia", "aluno", "viagem", "chamada", "inicial");
+        $professor  = array("conta", "chamada", "inicial");
+        $aluno = array("conta", "aluno", "inicial");
         $liberado = false;
         try
         {
@@ -105,7 +106,7 @@ class ControllerUniversal
                 }
                 else if (isset($_SESSION['area']) and $_SESSION['area'] == 3 and in_array($objeto, $professor))
                 {
-                    if($ato == "fazer" or $objeto == "conta")
+                    if($ato == "fazer" or $objeto == "conta" or $objeto == "inicial")
                     {
                         $liberado = true;
                     }
@@ -117,7 +118,16 @@ class ControllerUniversal
                 }
                 else if (isset($_SESSION['area']) and $_SESSION['area'] == 4 and in_array($objeto, $aluno))
                 {
-                    $liberado = true;
+                    if($objeto == "aluno" and ($ato == "nca" or $ato == "ncd") and $_GET['id'] == $_SESSION['id'])
+                        $liberado = true;
+                    else if($objeto == "conta" or $objeto == "inicial")
+                        $liberado = true;
+                    else
+                    {
+                        $titulo = "Erro no Acesso";
+                        include "view/erro.aanc";
+                    }
+
                 }
                 else
                 {

@@ -1,0 +1,30 @@
+<?php
+
+/**
+ * Created by PhpStorm.
+ * User: Leonardo Vilarinho e Guilherme Mamedio
+ * Date: 05/04/2016
+ * Time: 7:52
+ */
+
+
+class ControllerInicial
+{
+
+    /**
+     * @param $metodo
+     * Faz comunicação com ControllerUniversal, para executar seus métodos privados
+     */
+    public function inicializa($metodo)
+    {
+        $this->panel();
+    }
+
+    private function panel()
+    {
+        $titulo = "Inicio AANC";
+        $icone = "list";
+        include('view/inicial.aanc');
+    }
+    
+}
