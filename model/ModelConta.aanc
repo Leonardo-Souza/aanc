@@ -110,7 +110,7 @@ class ModelConta
                     $usuario = $this->crud->consult("alunos", "*", "cpf = {$cpf}");
                     if($cpf == $usuario[0]['cpf'] and password_verify($senha, $usuario[0]['senha']))
                     {
-                        $_SESSION['tipo'] = 2;
+                        $_SESSION['tipo'] = 1;
                         $_SESSION['area'] = 4;
                         $_SESSION['ativo'] = $usuario[0]['ativo'];
                         $_SESSION['id'] = $usuario[0]['id'];
