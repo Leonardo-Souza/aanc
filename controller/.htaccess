@@ -1,5 +1,0 @@
-<Files *.*>
-#Bloqueia arquivos da pasta
-order allow, deny
-deny from all
-</Files>
