@@ -106,12 +106,27 @@
                 </li>
             <?php endif; ?>
 
-            <?php if($_SESSION['id'] == 0 or $_SESSION['area'] == 3): ?>
+            <?php if($_SESSION['area'] == 3): ?>
                 <li>
                     <a href="javascript:;" data-toggle="collapse" data-target="#professor"><i class="fa fa-fw fa-briefcase"></i> Professor <i class="fa fa-fw fa-caret-down"></i></a>
                     <ul id="professor" class="collapse">
                         <li>
                             <a href="<?php echo "{$_SESSION['self']}chamada/fazer"; ?>"><i class="fa fa-fw fa-list"></i> Realizar Chamada</a>
+                        </li>
+                    </ul>
+
+                </li>
+            <?php endif; ?>
+
+            <?php if($_SESSION['area'] == 4): ?>
+                <li>
+                    <a href="javascript:;" data-toggle="collapse" data-target="#aluno"><i class="fa fa-fw fa-briefcase"></i> Aluno <i class="fa fa-fw fa-caret-down"></i></a>
+                    <ul id="aluno" class="collapse">
+                        <li>
+                            <a href="<?php echo "{$_SESSION['self']}aluno/nca/{$_SESSION['id']}"; ?>"><i class="fa fa-fw fa-file"></i> Apoio ND</a>
+                        </li>
+                        <li>
+                            <a href="<?php echo "{$_SESSION['self']}aluno/ncd/{$_SESSION['id']}"; ?>"><i class="fa fa-fw fa-file"></i> Diretoria ND</a>
                         </li>
                     </ul>
 

@@ -173,7 +173,10 @@ class ModelConta
             }
             else
             {
-                throw new Exception("Módulo Aluno ainda não foi inserido");
+                return $this->crud->update("alunos",
+                    array("senha", "ativo"),
+                    array(password_hash($senha, PASSWORD_DEFAULT), 1),
+                    "cpf = {$_SESSION['cpf']}");
             }
         }
         catch(CRUDException $ex)
