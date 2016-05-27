@@ -1,5 +1,6 @@
 <?php
-require_once 'libs/dompdf/autoload.inc.php';
+$caminho = isset($_SERVER['REQUEST_URI']) ? "" : "../";
+require_once $caminho.'libs/dompdf/autoload.inc.php';
 require_once 'ModelPersistencia.aanc';
 
 use Dompdf\Dompdf;

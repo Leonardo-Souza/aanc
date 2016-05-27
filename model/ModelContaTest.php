@@ -7,6 +7,7 @@
  * Time: 13:59
  */
 require_once 'ModelConta.aanc';
+
 class ModelContaTest extends PHPUnit_Framework_TestCase
 {
  
