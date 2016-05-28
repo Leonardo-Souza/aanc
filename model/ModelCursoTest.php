@@ -13,7 +13,7 @@ class ModelCursoTest extends PHPUnit_Framework_TestCase
 
  /**
   * Verifica se houve retorno na listagem dos cursos
-  * @test esperado OK 
+  * @test esperado OK  
   */
  public function testListagemCursos()
  {
