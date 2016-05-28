@@ -13,13 +13,16 @@ class ModelCursoTest extends PHPUnit_Framework_TestCase
 
  /**
   * Verifica se houve retorno na listagem dos cursos
-  * @test esperado OK   
+  * @test esperado OK
   */
  public function testListagemCursos()
  {
   $model = new ModelCurso();
-  $resultado = $model->preparaListagem("curso");
+  $resultado = $model->preparaListagem("cursos");
   $this->assertTrue(count($resultado) > 0 and !empty($resultado));
  }
+
+ 
+
 }
 
