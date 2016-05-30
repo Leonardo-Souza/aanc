@@ -41,7 +41,7 @@ class ModelCursoTest extends PHPUnit_Framework_TestCase
   $model = new ModelCurso();
   $dados = array
   (
-      "tabela" => "cursos",
+      "tabela" => "cursos", 
       "nome" => "Informatica",
       "descricao" => "blabla"
   );
