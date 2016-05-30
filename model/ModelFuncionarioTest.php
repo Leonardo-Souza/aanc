@@ -43,10 +43,10 @@ class ModelFuncionarioTest extends PHPUnit_Framework_TestCase
         (
             "tabela" => "funcionarios",
             "consultar" => "cpf",
-            "nome" => "Reane",
+            "nome" => "Girafales",
             "cpf" => "12345678901",
             "numero" => 3,
-            "email" => "reane-test@outlook.com",
+            "email" => "girafales@outlook.com",
             "telefone" => "000000000"
         );
         $resultado = $model->preparaCriacao($dados);
