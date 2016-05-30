@@ -55,4 +55,24 @@ class ModelFuncionarioTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($resultado);
     }
 
+    /**
+     * Tenta editar funcionario sem todos os dados necessraio
+     * @test esperado OK
+     */
+    public function testEdicaoFuncionario()
+    {
+        $model = new ModelFuncionario();
+        $dados = array
+        (
+            "tabela" => "funcionarios",
+            "consultar" => "cpf",
+            "cpf" => "33781172228",
+            "id" => 4,
+            "email" => "reane-test@outlook.com",
+            "telefone" => "000000000"
+        );
+        $resultado = @$model->preparaEdicao($dados);
+        $this->assertFalse($resultado);
+    }
+
 }
