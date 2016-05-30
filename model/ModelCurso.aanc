@@ -10,10 +10,9 @@
 // Includes
 
 require_once "ModelObjeto.aanc";
-  
+
 class ModelCurso extends ModelObjeto
 {
-
     /**
      * ModelFuncionario constructor.
      * Exectado quando o ModelFuncionario é instanciado, instancia um novo ModelPersistencia

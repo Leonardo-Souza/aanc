@@ -32,5 +32,22 @@ class ModelCursoTest extends PHPUnit_Framework_TestCase
   $this->assertFalse(count($resultado) > 0 and !empty($resultado));
  }
 
+ /**
+  * Tenta criar um curso com nome e descricao
+  * @test esperado OK
+  */
+ public function testCriacaoCurso()
+ {
+  $model = new ModelCurso();
+  $dados = array
+  (
+      "tabela" => "cursos",
+      "nome" => "Informatica",
+      "descricao" => "blabla"
+  );
+  $resultado = $model->preparaCriacao($dados);
+  $this->assertFalse($resultado);
+ }
+
 }
 
