@@ -38,14 +38,32 @@ class ModelCursoTest extends PHPUnit_Framework_TestCase
   */
  public function testCriacaoCurso()
  {
+  $this->setExpectedException("Exception", "Nome inválido");
   $model = new ModelCurso();
   $dados = array
   (
-      "tabela" => "cursos", 
-      "nome" => "Informatica",
+      "tabela" => "cursos",
+      "nome" => "123",
       "descricao" => "blabla"
   );
   $resultado = $model->preparaCriacao($dados);
+  $this->assertFalse($resultado);
+ }
+
+ /**
+  * Tenta editar cursos sem todos os dados necessraio
+  * @test esperado OK
+  */
+ public function testEdicaoCurso()
+ {
+
+  $model = new ModelCurso();
+  $dados = array
+  (
+      "tabela" => "cursos",
+      "nome" => "informatica"
+  );
+  $resultado = @$model->preparaEdicao($dados);
   $this->assertFalse($resultado);
  }
 
