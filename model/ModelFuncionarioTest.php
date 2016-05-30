@@ -1,9 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: Leonardo Vilarinho
  * Date: 27/05/2016
- * Time: 11:37
  */
 
 require_once 'ModelFuncionario.aanc';
@@ -45,10 +43,10 @@ class ModelFuncionarioTest extends PHPUnit_Framework_TestCase
         (
             "tabela" => "funcionarios",
             "consultar" => "cpf",
-            "nome" => "Girafales",
+            "nome" => "Reane",
             "cpf" => "12345678901",
             "numero" => 3,
-            "email" => "girafales@outlook.com",
+            "email" => "reane-test@outlook.com",
             "telefone" => "000000000"
         );
         $resultado = $model->preparaCriacao($dados);
