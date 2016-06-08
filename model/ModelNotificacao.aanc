@@ -1,0 +1,30 @@
+<?php
+
+/**
+ * Created by PhpStorm.
+ * User: Leonardo Vilarinho
+ * Date: 05/03/2016
+ * Time: 19:10
+ */
+
+// Includes
+
+require_once "ModelObjeto.aanc";
+
+class ModelNotificacao extends ModelObjeto
+{
+    /**
+     * ModeloNotificacao constructor.
+     * Exectado quando o ModeloNotificacao é instanciado, instancia um novo ModelPersistencia
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+    
+
+    public function preparaListagem($tabela)
+    {
+        return parent::abrirMetodo("listagem", $tabela);
+    }
+}
