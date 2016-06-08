@@ -1,0 +1,150 @@
+<?php
+
+/**
+ * Created by PhpStorm.
+ * User: Leonardo Vilarinho e Guilherme Mamedio
+ * Date: 05/04/2016
+ * Time: 7:52
+ */
+
+// Includes
+require_once 'model/ModelLiberacao.aanc';
+$erro = "";
+
+class ControllerLiberacao
+{
+    // variável para camada Model
+    public $model = NULL;
+
+    /**
+     * ControllerCurso constructor.
+     * Instancia camada Model
+     */
+    public function __construct()
+    {
+        $this->model = new ModelLiberacao();
+    }
+
+    /**
+     * @param $metodo
+     * Faz comunicação com ControllerUniversal, para executar seus métodos privados
+     */
+    public function inicializa($metodo)
+    {
+            $this->$metodo();
+    }
+
+    private function permitir($erro = null)
+    {
+
+        $titulo = "Adicionar permissão para aluno sair";
+        $icone = "plus";
+        try
+        {
+            $lista = $this->model->pegarAlunosMenores();
+        }
+        catch (Exception $e)
+        {
+            $erro = $e->getMessage();
+        }
+
+
+        if(isset($_GET['id']))
+        {
+            $id = (int)$_GET['id'];
+            try
+            {
+                if($this->model->addPermissao($id))
+                {
+                    header("Location:{$_SESSION['self']}liberacao/permitir");
+                }
+            }
+            catch (Exception $e)
+            {
+                $erro = $e->getMessage();
+            }
+        }
+
+        include "view/liberacao/permitir.aanc";
+    }
+
+    private function bloquear()
+    {
+
+        if(isset($_GET['id']))
+        {
+            $id = (int)$_GET['id'];
+            try
+            {
+                if($this->model->bloquearAluno($id))
+                {
+                    header("Location:{$_SESSION['self']}liberacao/permitir");
+                }
+            }
+            catch (Exception $e)
+            {
+                $erro = $e->getMessage();
+            }
+        }
+        unset($_GET['id']);
+        $this->permitir($erro);
+
+    }
+
+    private function liberar($erro = null)
+    {
+
+        $titulo = "Liberar aluno para sair";
+        $icone = "sign-out";
+        try
+        {
+            $lista = $this->model->pegarAlunosMenoresComPermissao();
+        }
+        catch (Exception $e)
+        {
+            $erro = $e->getMessage();
+        }
+
+
+        if(isset($_GET['id']))
+        {
+            $id = (int)$_GET['id'];
+            try
+            {
+                if($this->model->addLiberacao($id))
+                {
+                    header("Location:{$_SESSION['self']}liberacao/liberar");
+                }
+            }
+            catch (Exception $e)
+            {
+                $erro = $e->getMessage();
+            }
+        }
+
+        include "view/liberacao/liberar.aanc";
+    }
+
+    private function cancelar()
+    {
+
+        if(isset($_GET['id']))
+        {
+            $id = (int)$_GET['id'];
+            try
+            {
+                if($this->model->rmvLiberacao($id))
+                {
+                    header("Location:{$_SESSION['self']}liberacao/liberar");
+                }
+            }
+            catch (Exception $e)
+            {
+                $erro = $e->getMessage();
+            }
+        }
+        unset($_GET['id']);
+        $this->liberar($erro);
+
+    }
+}

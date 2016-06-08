@@ -1,0 +1,160 @@
+<?php
+
+/**
+ * Created by PhpStorm.
+ * User: Leonardo Vilarinho
+ * Date: 05/03/2016
+ * Time: 19:10
+ */
+
+// Includes
+
+require_once "ModelObjeto.aanc";
+require_once "ModelPersistencia.aanc";
+
+class ModelLiberacao extends ModelObjeto
+{
+    private $crud = NULL;
+    /**
+     * ModelFuncionario constructor.
+     * Exectado quando o ModelFuncionario é instanciado, instancia um novo ModelPersistencia
+     */
+    public function __construct()
+    {
+        $this->crud = new ModelPersistencia();
+        parent::__construct();
+    }
+    
+
+    public function pegarAlunosMenores()
+    {
+        $alunos = $this->sql("SELECT cursos.nome as ncurso, alunos.* FROM alunos, cursos WHERE cursos.id = alunos.curso");
+
+        if(!empty($alunos))
+        {
+            $data = date("Y");
+            for($item = 0; $item < count($alunos); $item ++)
+                if (mb_substr($alunos[$item]['nascimento'], 0, 4) != "0000" and ($data - mb_substr($alunos[$item]['nascimento'], 0, 4)) >= 18)
+                    unset($alunos[$item]);
+        }
+        return $alunos;
+
+    }
+
+    public function pegarAlunosMenoresComPermissao()
+    {
+        $alunos = $this->sql("SELECT cursos.nome as ncurso, alunos.* FROM alunos, cursos, permissao WHERE cursos.id = alunos.curso AND permissao.aluno = alunos.id");
+
+        if(!empty($alunos))
+        {
+            $data = date("Y");
+            for($item = 0; $item < count($alunos); $item ++)
+                if (mb_substr($alunos[$item]['nascimento'], 0, 4) != "0000" and ($data - mb_substr($alunos[$item]['nascimento'], 0, 4)) >= 18)
+                    unset($alunos[$item]);
+        }
+        return $alunos;
+
+    }
+
+    public function addPermissao($id)
+    {
+        $alunos = $this->crud->consult("permissao", "id", "aluno = {$id}");
+
+        if(!empty($alunos))
+        {
+            throw new Exception("Aluno já está com a permissão");
+        }
+        else
+        {
+            try
+            {
+                $this->crud->insert("permissao", "aluno", $id);
+                throw new Exception("Permissão foi adicionada ao sistema!");
+            }
+            catch (CRUDException $e)
+            {
+                throw $e;
+            }
+
+        }
+    }
+
+    public function addLiberacao($id)
+    {
+        $alunosLiberados = $this->crud->consult("liberados", "id", "aluno = {$id}");
+        $alunosPermitidos = $this->crud->consult("permissao", "id", "aluno = {$id}");
+        if(!empty($alunosLiberados) and !empty($alunosPermitidos))
+        {
+            throw new Exception("Aluno já está com a permissão e LIBERADO");
+        }
+        else
+        {
+            if(!empty($alunosPermitidos))
+            {
+                try
+                {
+                    $this->crud->insert("liberados", "aluno", $id);
+                    throw new Exception("Liberação foi adicionada ao sistema!");
+                }
+                catch (CRUDException $e)
+                {
+                    throw $e;
+                }
+            }
+            else
+            {
+                throw new Exception("Aluno não tem permissão para sair!");
+            }
+
+        }
+    }
+
+    public function bloquearAluno($id)
+    {
+        $alunos = $this->crud->consult("permissao", "id", "aluno = {$id}");
+
+        if(!empty($alunos))
+        {
+            try
+            {
+                $this->crud->delete("permissao", "aluno = {$id}");
+                throw new Exception("Permissão foi apagada no sistema!");
+            }
+            catch (CRUDException $e)
+            {
+                throw $e;
+            }
+        }
+        else
+        {
+            throw new Exception("Aluno já está sem a permissão");
+
+
+        }
+    }
+
+    public function rmvLiberacao($id)
+    {
+        $alunos = $this->crud->consult("liberados", "id", "aluno = {$id}");
+
+        if(!empty($alunos))
+        {
+            try
+            {
+                $this->crud->delete("liberados", "aluno = {$id}");
+                throw new Exception("Liberação foi apagada do sistema!");
+            }
+            catch (CRUDException $e)
+            {
+                throw $e;
+            }
+        }
+        else
+        {
+            throw new Exception("Aluno já está sem a liberação");
+
+
+        }
+    }
+
+}
