@@ -16,6 +16,8 @@ require_once 'ControllerAdvertencia.aanc';
 require_once 'ControllerChamada.aanc';
 require_once 'ControllerViagem.aanc';
 require_once 'ControllerInicial.aanc';
+require_once 'ControllerNotificacao.aanc';
+require_once 'ControllerLiberacao.aanc';
 
 class ControllerUniversal
 {
@@ -66,8 +68,8 @@ class ControllerUniversal
         $objeto = (isset($_GET['objeto'])) ? $_GET['objeto'] : NULL;
         $ato = (isset($_GET['ato'])) ? $_GET['ato'] : NULL;
         
-        $diretoria = array("curso", "conta", "aluno", "inicial");
-        $apoio = array("conta", "advertencia", "aluno", "viagem", "chamada", "inicial");
+        $diretoria = array("curso", "conta", "aluno", "inicial", "notificacao");
+        $apoio = array("conta", "advertencia", "aluno", "viagem", "chamada", "inicial", "notificacao", "liberacao");
         $professor  = array("conta", "chamada", "inicial");
         $aluno = array("conta", "aluno", "inicial");
         $liberado = false;

@@ -140,30 +140,6 @@ BEFORE;
         // Output the generated PDF to Browser
         $this->dompdf->stream("chamada_". time());
     }
-
-    private function sql($sql)
-    {
-        if($conn = $this->crud->connect())
-        {
-
-            if ($result = $conn->query($sql))
-            {
-                $rows = $result->fetchAll(PDO::FETCH_ASSOC);
-
-                if (!empty($rows))
-                {
-                    return $rows;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                return false;
-            }
-        }
-    }
+    
     
 }

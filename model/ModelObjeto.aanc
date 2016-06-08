@@ -34,11 +34,44 @@ class ModelObjeto
         return $this->$metodo($dados);
     }
 
+    public function sql($sql)
+    {
+        if($conn = $this->crud->connect())
+        {
+
+            if ($result = $conn->query($sql))
+            {
+                $rows = $result->fetchAll(PDO::FETCH_ASSOC);
+
+                if (!empty($rows))
+                {
+                    return $rows;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
+
     private function executaListagem($dados)
     {
         try
         {
-            return $resultado = $this->crud->consult($dados, "*");
+            if($dados == "notificacaos")
+            {
+                return $this->sql("SELECT notificacaos.*, alunos.nome FROM notificacaos, alunos WHERE alunos.id = notificacaos.aluno");
+            }
+            else
+            {
+                return $resultado = $this->crud->consult($dados, "*");
+            }
+
         }
         catch(CRUDException $ex)
         {
