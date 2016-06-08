@@ -96,6 +96,15 @@
                             </ul>
                         </li>
                         <li>
+                            <a href="javascript:;" data-toggle="collapse" data-target="#liberacao"><i class="fa fa-fw fa-folder"></i> Liberação <i class="fa fa-fw fa-caret-down"></i></a>
+                            <ul id="liberacao" class="collapse list lista">
+                                <li>
+                                    <a href="<?php echo "{$_SESSION['self']}liberacao/permitir"; ?>"><i class="fa fa-fw fa-check"></i> Dar permissão</a>
+                                    <a href="<?php echo "{$_SESSION['self']}liberacao/liberar"; ?>"><i class="fa fa-fw fa-sign-out"></i> Liberar</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
                             <a href="<?php echo "{$_SESSION['self']}chamada/gerar"; ?>"><i class="fa fa-fw fa-list"></i> Gerar Chamada</a>
                         </li>
                         <li>
