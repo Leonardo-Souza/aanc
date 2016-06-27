@@ -142,6 +142,17 @@
                 </li>
             <?php endif; ?>
 
+            <?php if($_SESSION['area'] == 5): ?>
+                <li>
+                    <a href="javascript:;" data-toggle="collapse" data-target="#liberacao"><i class="fa fa-fw fa-folder"></i> Portaria <i class="fa fa-fw fa-caret-down"></i></a>
+                    <ul id="liberacao" class="collapse list lista">
+                        <li>
+                            <a href="<?php echo "{$_SESSION['self']}liberacao/liberar"; ?>"><i class="fa fa-fw fa-sign-out"></i> Liberar</a>
+                        </li>
+                    </ul>
+                </li>
+            <?php endif; ?>
+
 
         </ul>
     </div>
