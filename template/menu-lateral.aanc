@@ -101,6 +101,7 @@
                                 <li>
                                     <a href="<?php echo "{$_SESSION['self']}liberacao/permitir"; ?>"><i class="fa fa-fw fa-check"></i> Dar permissão</a>
                                     <a href="<?php echo "{$_SESSION['self']}liberacao/liberar"; ?>"><i class="fa fa-fw fa-sign-out"></i> Liberar</a>
+                                    <a href="<?php echo "{$_SESSION['self']}liberacao/historico"; ?>"><i class="fa fa-fw fa-times"></i> Histórico</a>
                                 </li>
                             </ul>
                         </li>
