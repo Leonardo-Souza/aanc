@@ -67,6 +67,7 @@ class ControllerLiberacao
         try
         {
             $lista = $this->model->pegarAlunosMenores();
+
         }
         catch (Exception $e)
         {
@@ -118,7 +119,6 @@ class ControllerLiberacao
 
     private function liberar($erro = null)
     {
-
         $titulo = "Liberar aluno para sair";
         $icone = "sign-out";
         try
@@ -148,6 +148,21 @@ class ControllerLiberacao
         }
 
         include "view/liberacao/liberar.aanc";
+    }
+
+    private function historico()
+    {
+        $titulo = "Histórico de liberacao";
+        $icone = "sign-out";
+        try
+        {
+            $lista = $this->model->pegarAlunosMenoresComPermissao(true);
+        }
+        catch (Exception $e)
+        {
+            $erro = $e->getMessage();
+        }
+        include "view/liberacao/historico.aanc";
     }
 
     private function cancelar()

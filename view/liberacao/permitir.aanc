@@ -36,9 +36,6 @@ include_once 'template/head.aanc';
                             {
                                 foreach ($lista as $item) {
 
-                                }
-                                {
-
                                     echo <<<ITEM
                 <tr class="context-menu context-menu-{$item['id']}" id="{$item['id']}">
                     <td>{$item['ncurso']} </td>

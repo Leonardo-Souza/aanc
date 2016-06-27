@@ -34,27 +34,40 @@ class ModelLiberacao extends ModelObjeto
         {
             $data = date("Y");
             for($item = 0; $item < count($alunos); $item ++)
-                if (mb_substr($alunos[$item]['nascimento'], 0, 4) != "0000" and ($data - mb_substr($alunos[$item]['nascimento'], 0, 4)) >= 18)
+            {
+                $nascimento = explode('-', $alunos[$item]['nascimento'])[0];
+
+                if($nascimento != "0000" and ($data - $nascimento) >= 18)
                     unset($alunos[$item]);
+            }
+
         }
         return $alunos;
 
     }
 
-    public function pegarAlunosMenoresComPermissao()
+    public function pegarAlunosMenoresComPermissao($historico = false)
     {
-        $alunos = $this->sql("SELECT cursos.nome as ncurso, alunos.* FROM alunos, cursos, permissao WHERE cursos.id = alunos.curso AND permissao.aluno = alunos.id");
-
+        if($historico)
+            $alunos = $this->sql("SELECT cursos.nome as ncurso, alunos.*, historico.horario, historico.apoio FROM alunos, cursos, historico WHERE cursos.id = alunos.curso AND historico.aluno = alunos.id");
+        else if($_SESSION['area'] != 5)
+            $alunos = $this->sql("SELECT cursos.nome as ncurso, alunos.* FROM alunos, cursos, permissao WHERE cursos.id = alunos.curso AND permissao.aluno = alunos.id");
+        else
+            $alunos = $this->sql("SELECT cursos.nome as ncurso, alunos.*, liberados.horario FROM alunos, cursos, liberados WHERE cursos.id = alunos.curso AND liberados.aluno = alunos.id");
         if(!empty($alunos))
         {
-            $data = date("Y");
-            for($item = 0; $item < count($alunos); $item ++)
-                if (mb_substr($alunos[$item]['nascimento'], 0, 4) != "0000" and ($data - mb_substr($alunos[$item]['nascimento'], 0, 4)) >= 18)
-                    unset($alunos[$item]);
+            if(!$historico)
+            {
+                $data = date("Y");
+                for ($item = 0; $item < count($alunos); $item++)
+                    if (mb_substr($alunos[$item]['nascimento'], 0, 4) != "0000" and ($data - mb_substr($alunos[$item]['nascimento'], 0, 4)) >= 18)
+                        unset($alunos[$item]);
+            }
         }
         return $alunos;
 
     }
+
 
     public function addPermissao($id)
     {
@@ -135,14 +148,24 @@ class ModelLiberacao extends ModelObjeto
 
     public function rmvLiberacao($id)
     {
-        $alunos = $this->crud->consult("liberados", "id", "aluno = {$id}");
+        $alunos = $this->crud->consult("liberados", "*", "aluno = {$id}");
 
         if(!empty($alunos))
         {
             try
             {
-                $this->crud->delete("liberados", "aluno = {$id}");
-                throw new Exception("Liberação foi apagada do sistema!");
+                if($_SESSION['area'] != 5)
+                {
+                    $this->crud->delete("liberados", "aluno = {$id}");
+                    throw new Exception("Liberação foi apagada do sistema!");
+                }
+                else
+                {
+                    date_default_timezone_set("America/Sao_Paulo");
+                    $this->crud->insert("historico", array('aluno', 'apoio', 'horario'), array($id, $alunos[0]['horario'], date('Y-m-d H:i:s')));
+                    $this->crud->delete("liberados", "aluno = {$id}");
+                    throw new Exception("Aluno foi liberado! Caso tenha ocorrido um engano procure o Apoio ao Estudante para corrigir a falha.");
+                }
             }
             catch (CRUDException $e)
             {

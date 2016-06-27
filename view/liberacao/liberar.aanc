@@ -27,38 +27,45 @@ include_once 'template/head.aanc';
                             <tr>
                                 <th>Curso</th>
                                 <th>Nome</th>
-                                <th>Nascimento</th>
+                                <?php echo ($_SESSION['area'] == 5) ? "<th>Horário do Apoio</th>" : "<th>Nascimento</th>"; ?>
+
                             </tr>
                             </thead>
 
                             <?php
                             if(!empty($lista))
                             {
-                                foreach ($lista as $item) {
 
-                                }
+                                for ($item = 0; $item < count($lista); $item ++)
                                 {
+                                    $coluna = ($_SESSION['area'] == 5) ? $lista[$item]['horario'] : $lista[$item]['nascimento'];
+
 
                                     echo <<<ITEM
-                <tr class="context-menu context-menu-{$item['id']}" id="{$item['id']}">
-                    <td>{$item['ncurso']} </td>
-                    <td>{$item['nome']}</td>
+                <tr class="context-menu context-menu-{$lista[$item]['id']}" id="{$lista[$item]['id']}">
+                    <td>{$lista[$item]['ncurso']} </td>
+                    <td>{$lista[$item]['nome']}</td>
                     <td>
-                    {$item['nascimento']}
+                    {$coluna}
                     <div style="float: right;">
-                        <a class="btn btn-circle btn-warning" href="{$_SESSION['self']}liberacao/liberar/{$item['id']}" ><i class="fa fa-sign-out"></i>L</a>
-                        <a class="btn btn-circle btn-danger" href="{$_SESSION['self']}liberacao/cancelar/{$item['id']}" ><i class="fa fa-trash"></i>C</a>
-                    </div>
-                     </td>
-                    
-
-                </tr>
 ITEM;
+                                    if($_SESSION['area'] != 5)
+                                    echo <<<ITEM
+                        <a class="btn btn-circle btn-warning" href="{$_SESSION['self']}liberacao/liberar/{$lista[$item]['id']}" ><i class="fa fa-sign-out"></i>L</a>
+                        <a class="btn btn-circle btn-danger" href="{$_SESSION['self']}liberacao/cancelar/{$lista[$item]['id']}" ><i class="fa fa-trash"></i>C</a>
+ITEM;
+                                    else
+                                        echo <<<ITEM
+                        <a class="btn btn-circle btn-success" href="{$_SESSION['self']}liberacao/cancelar/{$lista[$item]['id']}" ><i class="fa fa-trash"></i>L</a>
+ITEM;
+
+                    echo "</div></td></tr>";
+
                                 }
                             }
                             else
                             {
-                                echo "<tr><td colspan='6'>".$erro."</td></tr>";
+                                echo "<tr class='text-center'><td colspan='6'>Sem dados a exibir</td></tr>";
                             }
                             ?>
                         </table>
@@ -71,8 +78,4 @@ ITEM;
 
 <?php
 include_once 'template/scripts.aanc';
-echo "<script src='{$_SESSION['self']}libs/contextmenu/jquery.contextMenu.min.js' type='text/javascript'></script>";
-echo "<script src='{$_SESSION['self']}js/excluir.js' type='text/javascript'></script>";
-echo "<script src='{$_SESSION['self']}js/contextmenu-usuarios.js' type='text/javascript'></script>";
-
 include_once 'template/end.aanc';
