@@ -34,6 +34,31 @@ class ControllerLiberacao
             $this->$metodo();
     }
 
+    private function logar()
+    {
+        $titulo = "Logar no módulo portaria";
+        $icone = "sign-in";
+        
+        if(isset($_POST['login-requerido']))
+        {
+            if(trim($_POST['codigo']) === "12345678")
+            {
+                $_SESSION['tipo'] = 3;
+                $_SESSION['area'] = 5;
+                $_SESSION['ativo'] = 1;
+                $_SESSION['id'] = -1;
+                $_SESSION['usuario'] = "Portaria";
+                $_SESSION['cpf'] = trim($_POST['codigo']);
+                    
+                header("Location: {$_SESSION['self']}liberacao/liberar");
+            }
+            else
+                $erro = "Código inválido";
+        }
+
+        include "view/portaria/entrar.aanc";
+    }
+
     private function permitir($erro = null)
     {
 

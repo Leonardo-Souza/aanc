@@ -189,15 +189,15 @@ class ModelObjeto
             {
                 if($tipo == "ncd")
                 {
-                    $verifica = $this->crud->consult("requisicoes", "id", "aluno = {$_SESSION['id']} AND tipo = 0");
+                    $verifica = $this->crud->consult("notificacaos", "id", "aluno = {$_SESSION['id']} AND tipo = 0");
                     if(empty($verifica))
-                        $this->crud->insert("requisicoes", array("aluno", "tipo"), array($_SESSION['id'], 0));
+                        $this->crud->insert("notificacaos", array("aluno", "tipo"), array($_SESSION['id'], 0));
                 }
                 else
                 {
-                    $verifica = $this->crud->consult("requisicoes", "id", "aluno = {$_SESSION['id']} AND tipo = 1");
+                    $verifica = $this->crud->consult("notificacaos", "id", "aluno = {$_SESSION['id']} AND tipo = 1");
                     if(empty($verifica))
-                        $this->crud->insert("requisicoes", array("aluno", "tipo"), array($_SESSION['id'], 1));
+                        $this->crud->insert("notificacaos", array("aluno", "tipo"), array($_SESSION['id'], 1));
                 }
 
             }
