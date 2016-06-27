@@ -114,7 +114,7 @@ class ControllerUniversal
                 }
                 else if (isset($_SESSION['area']) and $_SESSION['area'] == 5 and in_array($objeto, $apoio))
                 {
-                    if($ato != "liberar")
+                    if($ato != "liberar" and $ato != "cancelar")
                     {
                         $liberado = false;
                         $titulo = "Erro no Acesso";
