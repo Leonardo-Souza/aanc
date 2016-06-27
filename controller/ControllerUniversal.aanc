@@ -26,18 +26,20 @@ class ControllerUniversal
      */
     public function verificaLogin()
     {
+        $url = explode("/", $_SERVER['REQUEST_URI']);
         if(isset($_SESSION['usuario']) and isset($_SESSION['id']))
         {
-            if($_SESSION['ativo'] == 0)
-            {
+            if ($_SESSION['ativo'] == 0) {
                 $_GET['objeto'] = "conta";
                 $_GET['ato'] = "alterarsenha";
+            } else {
+                $_GET['objeto'] = (isset($_GET['objeto'])) ? $_GET['objeto'] : "inicial";
+                $_GET['ato'] = (isset($_GET['ato'])) ? $_GET['ato'] : "panel";
             }
-            else
-            {
-                $_GET['objeto'] = (isset($_GET['objeto'])) ? $_GET['objeto'] : "inicial" ;
-                $_GET['ato'] = (isset($_GET['ato'])) ? $_GET['ato'] : "panel" ;
-            }
+        }
+        else if($url[2] == "p" or $url[2] == "liberacao" or $url[2] == "liberar" or $url[2] == "liberar")
+        {
+            $_GET['objeto'] = "liberacao";
         }
         else
         {
@@ -67,12 +69,20 @@ class ControllerUniversal
 
         $objeto = (isset($_GET['objeto'])) ? $_GET['objeto'] : NULL;
         $ato = (isset($_GET['ato'])) ? $_GET['ato'] : NULL;
+
+        if($_GET['objeto'] == 'liberacao' and ($_GET['ato'] == 'liberacao' or $_GET['ato'] == 'portaria' or $_GET['ato'] == 'l' or $_GET['ato'] == 'p'))
+        {
+            $objeto = "liberacao";
+            $ato = "logar";
+        }
         
         $diretoria = array("curso", "conta", "aluno", "inicial", "notificacao");
         $apoio = array("conta", "advertencia", "aluno", "viagem", "chamada", "inicial", "notificacao", "liberacao");
         $professor  = array("conta", "chamada", "inicial");
         $aluno = array("conta", "aluno", "inicial");
+        $portaria = array("liberacao");
         $liberado = false;
+
         try
         {
             if($ato == "sair")
@@ -92,6 +102,19 @@ class ControllerUniversal
                 else if (isset($_SESSION['area']) and $_SESSION['area'] == 1 and in_array($objeto, $apoio))
                 {
                     if($objeto == "aluno" and ($ato == "criar" or $ato == "ncd") )
+                    {
+                        $liberado = false;
+                        $titulo = "Erro no Acesso";
+                        include "view/erro.aanc";
+                    }
+                    else
+                    {
+                        $liberado = true;
+                    }
+                }
+                else if (isset($_SESSION['area']) and $_SESSION['area'] == 5 and in_array($objeto, $apoio))
+                {
+                    if($ato != "liberar")
                     {
                         $liberado = false;
                         $titulo = "Erro no Acesso";
